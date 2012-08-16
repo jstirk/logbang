@@ -38,6 +38,40 @@ Or install it yourself as:
 Simply call `log!` (with a message or without) anywhere that is called
 in the context of +ActionController::Base+ (controller, views, helpers).
 
+It will create log entries that look like this:
+
+```
+ = Marked: container-start - 4380ee5
+```
+
+They'll be bright yellow, so you can't miss them!
+
+At the end of a successful request, a table with timing information will
+be output :
+
+```
+ = 56e83ce @     0ms (+    0ms)  /app/views/agreements/index.html.erb
+ = 8933225 @   391ms (+  391ms)    helper-start
+ = 8dc03cc @   444ms (+   53ms)    helper-end
+ = 4380ee5 @   625ms (+  180ms)  container-start
+ = bcec099 @   694ms (+   69ms)  container-end
+```
+
+Note that the random ID in the first column of the table match up with
+the individual log lines so as that you can easily find them. They
+change every request so the chances of having multiple matches is
+reduced.
+
+The second column shows the time since the first call to `log!`, and the
+third column is the delta from the previous log entry. Both these values
+are incredibly helpful when you're hunting of debugging performance
+issues, or testing optimisations.
+
+Where possible, logbang will indent subsequent calls to log when it can
+work out that they are nested. Currently this is fairly naive, and can
+only make the match when the files are the direct caller (eg. a view
+calling a helper, or a helper calling another helper).
+
 ## Contributing
 
 1. Fork it
